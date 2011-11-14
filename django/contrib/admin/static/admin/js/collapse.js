@@ -15,11 +15,13 @@
 			function() { // Show
 				$(this).text(gettext("Hide"));
 				$(this).closest("fieldset").removeClass("collapsed");
+				$(this).closest("fieldset").find("*").trigger("show.fieldset",[$(this).attr("id")]);
 				return false;
 			},
 			function() { // Hide
 				$(this).text(gettext("Show"));
 				$(this).closest("fieldset").addClass("collapsed");
+				$(this).closest("fieldset").find("*").trigger("hide.fieldset",[$(this).attr("id")]);
 				return false;
 			}
 		);

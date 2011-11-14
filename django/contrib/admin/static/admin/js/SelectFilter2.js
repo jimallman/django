@@ -99,7 +99,20 @@ window.SelectFilter = {
 
         if (!is_stacked) {
             // In horizontal mode, give the same height to the two boxes.
-            $(to_box).height($(filter_p).outerHeight() + $(from_box).outerHeight());
+            if ($(from_box).outerHeight() > 0) {
+                // this fieldset is already open, resize now
+                $(to_box).height($(filter_p).outerHeight() + $(from_box).outerHeight());
+            } else {
+                // this fieldset is probably collapsed (not safe to resize); wait for its 'show' event
+                $(to_box).bind('show.fieldset', function( event, fieldsetID ) {
+                    var $myCollapseToggle = $(this).closest('fieldset').find('.collapse-toggle').eq(0);
+                    if (fieldsetID === $myCollapseToggle.attr('id')) {
+                        // my fieldset was toggled! resize now (just once, then unbind the event)
+                        $(this).height($(filter_p).outerHeight() + $(from_box).outerHeight());
+                        $(this).unbind(event);
+                    }
+                });
+            }
         }
 
         // Initial icon refresh
