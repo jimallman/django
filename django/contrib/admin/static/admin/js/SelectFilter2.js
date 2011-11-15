@@ -104,13 +104,9 @@ window.SelectFilter = {
                 $(to_box).height($(filter_p).outerHeight() + $(from_box).outerHeight());
             } else {
                 // this fieldset is probably collapsed (not safe to resize); wait for its 'show' event
-                $(to_box).bind('show.fieldset', function( event, fieldsetID ) {
-                    var $myCollapseToggle = $(this).closest('fieldset').find('.collapse-toggle').eq(0);
-                    if (fieldsetID === $myCollapseToggle.attr('id')) {
-                        // my fieldset was toggled! resize now (just once, then unbind the event)
-                        $(this).height($(filter_p).outerHeight() + $(from_box).outerHeight());
-                        $(this).unbind(event);
-                    }
+                $(to_box).closest('fieldset').bind('show.fieldset', function( event, fieldsetID ) {
+                    $(to_box).height($(filter_p).outerHeight() + $(from_box).outerHeight());
+                    $(this).unbind(event);   // unbinds ONLY this handler (no need to resize repeatedly)
                 });
             }
         }
